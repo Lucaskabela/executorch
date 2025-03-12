@@ -41,7 +41,7 @@ jobs:
           - repository: pytorch/executorch
             pre-script: build/packaging/pre_build_script.sh
             post-script: build/packaging/post_build_script.sh
-            smoke-test-script: build/packaging/smoke_test.py
+            smoke-test-script: build/util/packaging/wheel_test.py --target-os linux
             package-name: executorch
     name: ${{ matrix.repository }}
     uses: pytorch/test-infra/.github/workflows/build_wheels_linux.yml@main

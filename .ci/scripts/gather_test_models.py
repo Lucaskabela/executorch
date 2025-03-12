@@ -113,13 +113,10 @@ def model_should_run_on_target_os(model: str, target_os: str) -> bool:
     return model not in ["llava"]
 
 
-def export_models_for_ci() -> dict[str, dict]:
+def export_models_for_ci(target_os: str, event: str) -> dict[str, Any]:
     """
     This gathers all the example models that we want to test on GitHub OSS CI
     """
-    args = parse_args()
-    target_os = args.target_os
-    event = args.event
 
     # This is the JSON syntax for configuration matrix used by GitHub
     # https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs
@@ -175,9 +172,14 @@ def export_models_for_ci() -> dict[str, dict]:
             record["runner"] = CUSTOM_RUNNERS[target_os][name]
 
         models["include"].append(record)
-
-    set_output("models", json.dumps(models))
+    
+    return models
 
 
 if __name__ == "__main__":
-    export_models_for_ci()
+    args = parse_args()
+    models = export_models_for_ci(
+        target_os = args.target_os,
+        event = args.event
+    )
+    set_output("models", json.dumps(models))
